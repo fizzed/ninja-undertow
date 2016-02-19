@@ -3,7 +3,7 @@
 
     <groupId>com.fizzed</groupId>
     <artifactId>ninja-undertow</artifactId>
-    <version>5.3.1-SNAPSHOT</version>
+    <version>5.3.1.undertow1</version>
     <packaging>jar</packaging>
     
     <description>
@@ -25,7 +25,8 @@
     <scm>
         <url>https://github.com/fizzed/ninja-undertow.git</url>
         <connection>scm:git:git@github.com:fizzed/ninja-undertow.git</connection>
-    </scm>
+      <tag>v5.3.1.undertow1</tag>
+  </scm>
 
     <!-- ignore javadoc linting for JDK 8 on release -->
     <profiles>
