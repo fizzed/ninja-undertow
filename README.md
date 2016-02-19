@@ -30,7 +30,7 @@ Ninja-undertow is compiled with Java 8, whereas Ninja supports Java 7+.
 
 Ninja-undertow is on maven central.  The version will always be the Ninja
 version it was compiled against + `undertowN` which represents the undertow
-build increment.
+build increment.  First, add the dependency to your Ninja project.
 
 ```xml
 <dependency>
@@ -40,13 +40,10 @@ build increment.
 </dependency>
 ```
 
-You can either add it to your build as a new dependency or remove your
-`ninja-standalone` dependency and replace it with `ninja-undertow`.  If you add
-it, remember that your final assembly will contain both jetty and undertow
-dependencies and may be a bit more bloated than you need.
+Second, comment out or delete the `ninja-standalone` dependency.
 
-To use `ninja-undertow` in the `ninja-maven-plugin` add a new configuration
-which sets the mainClass.
+Third, to use `ninja-undertow` in the `ninja-maven-plugin` add a new configuration
+which sets it as the mainClass.
 
 ```xml
 <build>
@@ -67,12 +64,22 @@ which sets the mainClass.
 </build>
 ```
 
-To use `ninja-undertow` in your final fat jar, command-line, etc. you'll simply
-just need to run the main class `ninja.undertow.NinjaUndertow`.
+Fourth, to enable `ninja-undertow` for your unit tests, you'll need to configure
+your surefire maven plugin to use it.
 
-To use `ninja-undertow` in your unit tests that use some of Ninja's standard
-junit classes, you'll need to make sure the system property `ninja.standalone.class`
-is set to a value of `ninja.undertow.NinjaUndertow`.
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>2.19.1</version>
+    <configuration>
+        <argLine>-Dninja.standalone.class=ninja.undertow.NinjaUndertow</argLine>
+    </configuration>
+</plugin>
+```
+
+Finally, to use `ninja-undertow` in your final fat jar, command-line, etc. you'll
+simply just need to run the main class `ninja.undertow.NinjaUndertow`.
 
 Hopefully, future version of Ninja can make it even easier to plugin a new 
 standalone (e.g. with service loaders).
