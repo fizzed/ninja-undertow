@@ -28,7 +28,9 @@ Ninja-undertow is compiled with Java 8, whereas Ninja supports Java 7+.
 
 ## Usage
 
-Ninja-undertow is on maven central.
+Ninja-undertow is on maven central.  The version will always be the Ninja
+version it was compiled against + `undertowN` which represents the undertow
+build increment.
 
 ```xml
 <dependency>
