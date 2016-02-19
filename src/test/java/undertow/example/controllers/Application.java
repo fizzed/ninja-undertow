@@ -15,16 +15,14 @@
  */
 package undertow.example.controllers;
 
+import java.util.List;
 import ninja.Context;
+import ninja.Cookie;
 import ninja.Result;
 import ninja.Results;
 import ninja.params.Param;
 import undertow.example.models.BasicForm;
 
-/**
- *
- * @author joelauer
- */
 public class Application {
     
     public Result home() {
@@ -52,6 +50,28 @@ public class Application {
             .ok()
             .html()
             .renderRaw("a=" + a + ", b=" + b);
+    }
+    
+    public Result benchmark_form(Context context, @Param("a") String a, @Param("b") Integer b, BasicForm form) {
+        Cookie testCookie = context.getCookie("TEST");
+        String contentType = context.getHeader("Content-Type");
+        String aParam = context.getParameter("a");
+        String bParam = context.getParameter("b");
+        return Results
+            .ok()
+            .html()
+            .renderRaw("benchmark");
+    }
+    
+    public Result benchmark_json(Context context, @Param("a") String a, @Param("b") Integer b, BasicForm form) {
+        Cookie testCookie = context.getCookie("TEST");
+        String contentType = context.getHeader("Content-Type");
+        String aParam = context.getParameter("a");
+        String bParam = context.getParameter("b");
+        return Results
+            .ok()
+            .html()
+            .renderRaw("benchmark");
     }
     
     public Result basic_form(BasicForm form) {

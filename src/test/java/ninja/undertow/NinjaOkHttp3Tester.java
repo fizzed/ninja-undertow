@@ -34,6 +34,10 @@ import okhttp3.logging.HttpLoggingInterceptor;
 
 public class NinjaOkHttp3Tester {
     
+    static public OkHttpClient.Builder newHttpClientBuilder() {
+        return new OkHttpClient.Builder();
+    }
+    
     static public OkHttpClient.Builder newHttpClientBuilderWithLogging() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
