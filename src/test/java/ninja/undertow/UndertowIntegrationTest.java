@@ -1,0 +1,200 @@
+/*
+ * Copyright 2016 Fizzed, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package ninja.undertow;
+
+import ninja.standalone.StandaloneHelper;
+import static ninja.undertow.NinjaOkHttp3Tester.executeRequest;
+import static ninja.undertow.NinjaOkHttp3Tester.requestBuilder;
+import ninja.utils.NinjaMode;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
+import org.junit.AfterClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
+import org.junit.BeforeClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+
+public class UndertowIntegrationTest {
+    static private final Logger log = LoggerFactory.getLogger(UndertowIntegrationTest.class);
+    
+    static private NinjaUndertow standalone;
+    static private OkHttpClient client;
+    
+    @BeforeClass
+    static public void beforeClass() throws Exception {
+        int randomPort = StandaloneHelper.findAvailablePort(8081, 9000);
+        
+        standalone  = new NinjaUndertow()
+            .externalConfigurationPath("conf/undertow.example.conf")
+            .ninjaMode(NinjaMode.test)
+            .port(randomPort)
+            .start();
+        
+        client = NinjaOkHttp3Tester.newHttpClientBuilderWithLogging().build();
+    }
+    
+    @AfterClass
+    static public void afterClass() {
+        standalone.shutdown();
+    }
+    
+    @Test
+    public void basicGet() throws Exception {
+        Request request
+            = requestBuilder(standalone, "/")
+                .build();
+        
+        Response response = executeRequest(client, request);
+          
+        assertThat(response.code(), is(200));
+        assertThat(response.header("Content-Type"), equalToIgnoringCase("text/html; charset=utf-8"));
+        assertThat(response.body().string(), containsString("Hello World"));
+    }
+
+    @Test
+    public void notFound() throws Exception {
+        Request request
+            = requestBuilder(standalone, "/doesnotexist")
+                .build();
+        
+        Response response = executeRequest(client, request);
+        
+        assertThat(response.code(), is(404));
+        assertThat(response.header("Content-Type"), equalToIgnoringCase("text/html; charset=utf-8"));
+        assertThat(response.body().string(), containsString("requested route cannot be found"));
+    }
+    
+    @Test
+    public void withQueryParameters() throws Exception {
+        Request request
+            = requestBuilder(standalone, "/parameters?a=joe&b=2")
+                .build();
+        
+        Response response = executeRequest(client, request);
+        
+        assertThat(response.code(), is(200));
+        assertThat(response.header("Content-Type"), equalToIgnoringCase("text/html; charset=utf-8"));
+        assertThat(response.body().string(), is("a=joe, b=2"));
+    }
+    
+    @Test
+    public void withFormParameters() throws Exception {
+        Request request
+            = requestBuilder(standalone, "/parameters")
+                .post(new FormBody.Builder()
+                    .add("a", "joe")
+                    .add("b", "2")
+                    .build())
+                .build();
+        
+        Response response = executeRequest(client, request);
+        
+        assertThat(response.code(), is(200));
+        assertThat(response.header("Content-Type"), equalToIgnoringCase("text/html; charset=utf-8"));
+        assertThat(response.body().string(), is("a=joe, b=2"));
+    }
+    
+    @Test
+    public void withQueryAndFormParameters() throws Exception {
+        Request request
+            = requestBuilder(standalone, "/parameters?a=joe")
+                .post(new FormBody.Builder()
+                    .add("b", "2")
+                    .build())
+                .build();
+        
+        Response response = executeRequest(client, request);
+        
+        assertThat(response.code(), is(200));
+        assertThat(response.header("Content-Type"), equalToIgnoringCase("text/html; charset=utf-8"));
+        assertThat(response.body().string(), is("a=joe, b=2"));
+    }
+    
+    @Test
+    public void withBoundForm() throws Exception {
+        Request request
+            = requestBuilder(standalone, "/basic_form?s=s")
+                .post(new FormBody.Builder()
+                    .add("s", "2nd_value_for_s_not_bound")
+                    .add("i", "1")
+                    .add("l", "2")
+                    .add("b", "true")
+                    .build())
+                .build();
+        
+        Response response = executeRequest(client, request);
+        
+        assertThat(response.code(), is(200));
+        assertThat(response.header("Content-Type"), equalToIgnoringCase("text/html; charset=utf-8"));
+        assertThat(response.body().string(), is("s=s, i=1, l=2, b=true"));
+    }
+    
+    @Test
+    public void scheme() throws Exception {
+        Request request
+            = requestBuilder(standalone, "/scheme")
+                .build();
+        
+        Response response = executeRequest(client, request);
+        
+        assertThat(response.code(), is(200));
+        assertThat(response.header("Content-Type"), equalToIgnoringCase("text/html; charset=utf-8"));
+        assertThat(response.body().string(), is("http"));
+    }
+    
+    @Test
+    public void remoteAddr() throws Exception {
+        Request request
+            = requestBuilder(standalone, "/remote_addr")
+                .build();
+        
+        Response response = executeRequest(client, request);
+        
+        assertThat(response.code(), is(200));
+        assertThat(response.header("Content-Type"), equalToIgnoringCase("text/html; charset=utf-8"));
+        assertThat(response.body().string(), is("127.0.0.1"));
+    }
+    
+    @Test
+    public void requestPath() throws Exception {
+        Request request
+            = requestBuilder(standalone, "/request_path")
+                .build();
+        
+        Response response = executeRequest(client, request);
+        
+        assertThat(response.code(), is(200));
+        assertThat(response.header("Content-Type"), equalToIgnoringCase("text/html; charset=utf-8"));
+        assertThat(response.body().string(), is("/request_path"));
+    }
+    
+    /**
+    @Test
+    public void requestPathWithEncoded() throws Exception {
+        String page = Requester.to(standalone)
+                .GET("/request_path%2Fr");
+
+        assertThat(page, is("/request_path"));
+    }
+    */
+}
