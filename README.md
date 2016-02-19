@@ -30,10 +30,11 @@ Compile and test project by itself and install it
 
     mvn test
 
-Use ninja unit tests to verify
+Use ninja unit tests to verify.  Install ninja-undertow followed by a [Blaze](https://github.com/fizzed/blaze)
+script to clone Ninja's upstream git repo.
 
     mvn install
-    blaze cloneOrRebaseNinjaRepo
+    java -jar blaze.jar cloneOrRebaseNinjaRepo
 
 Then edit ninja's standalone module to include ninja-undertow.  This means any
 other module in ninja that pulls in ninja-standalone will also have ninja-undertow.
@@ -56,3 +57,9 @@ That system property controls the underlying implementation that ninja creates
 for its own standalone instance.  Results in NinjaUndertow entirely replacing
 every occurrence where NinjaJetty is used.  Therefore, it taps into all the
 NinjaFramework unit tests :-)
+
+## License
+
+Copyright (C) 2016 Fizzed, Inc.
+
+This work is licensed under the Apache License, Version 2.0. See LICENSE for details.
