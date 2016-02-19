@@ -17,12 +17,14 @@ is 15.5% faster than ninja-jetty for standard GET requests and 7.6% faster than
 ninja-jetty for POST requests w/ JSON.  Future optimizations and tuning should
 only improve performance.
 
-## What isn't implemented yet?
+## What isn't implemented?
 
 Ninja-undertow passes all current Ninja unit tests except two.  Ninja-undertow
 does not implement any of Ninja's async-machine-beta features (which Ninja will 
 probably deprecate anyway) and some of the really recent File upload features
 (which should be easy to fix if someone wants to submit a PR!).
+
+Ninja-undertow is compiled with Java 8, whereas Ninja supports Java 7+.
 
 ## Testing
 

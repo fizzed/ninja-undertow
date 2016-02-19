@@ -18,6 +18,24 @@
     
     <url>http://www.ninjaframework.org</url>
 
+    <scm>
+        <url>https://github.com/fizzed/ninja-undertow.git</url>
+        <connection>scm:git:git@github.com:fizzed/ninja-undertow.git</connection>
+    </scm>
+
+    <!-- ignore javadoc linting for JDK 8 on release -->
+    <profiles>
+        <profile>
+            <id>doclint-java8-disable</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <javadoc.opts>-Xdoclint:none</javadoc.opts>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
