@@ -1,0 +1,3 @@
+[submodule "ninja-upstream"]
+	path = ninja-upstream
+	url = git@github.com:ninjaframework/ninja.git
