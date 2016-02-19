@@ -344,9 +344,8 @@ public class NinjaUndertowContext extends AbstractContext {
 
         // copy headers
         for (Entry<String, String> header : result.getHeaders().entrySet()) {
-            //httpServletResponse.addHeader(header.getKey(), header.getValue());
             exchange.getResponseHeaders()
-                    .add(new HttpString(header.getKey()), header.getValue());
+                .add(new HttpString(header.getKey()), header.getValue());
         }
 
         // charset in use
@@ -361,7 +360,7 @@ public class NinjaUndertowContext extends AbstractContext {
                 .toString();
 
             exchange.getResponseHeaders().put(
-                        Headers.CONTENT_TYPE, contentTypeHeader);
+                Headers.CONTENT_TYPE, contentTypeHeader);
         }
 
         return new ResponseStreams() {
