@@ -16,7 +16,7 @@ public class blaze {
 
     public void benchmark() {
         exec("mvn", "test-compile").run();
-        exec("mvn", "exec:exec", "-Dexec.executable=java", "-Dexec.classpathScope=test", "-Dexec.args=-cp %classpath ninja.undertow.BenchmarkMain").run();
+        exec("mvn", "exec:exec", "-Dexec.executable=java", "-Dexec.classpathScope=test", "-Dexec.args=-cp %classpath ninja.undertow.Benchmarker").run();
     }
     
     public void cloneOrRebaseNinjaRepo() throws Exception {
