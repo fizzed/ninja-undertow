@@ -43,11 +43,6 @@
     </build>
 
     <dependencies>
-
-        <dependency>
-            <groupId>org.ninjaframework</groupId>
-            <artifactId>ninja-core</artifactId>
-        </dependency>
         
         <dependency>
             <groupId>org.ninjaframework</groupId>
@@ -57,6 +52,28 @@
         <dependency>
             <groupId>com.fizzed</groupId>
             <artifactId>ninja-undertow</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.sf.ehcache</groupId>
+                    <artifactId>ehcache-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-entitymanager</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.spy</groupId>
+                    <artifactId>spymemcached</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-c3p0</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
