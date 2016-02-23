@@ -12,10 +12,28 @@ uses.  Ninja-undertow can fully replace Ninja's Jetty-based standalone.
 
 ## Performance
 
-Based on this [benchmark](src/test/java/ninja/undertow/Benchmarker.java) ninja-undertow
+Based on this [benchmark](ninja-benchmark/src/main/java/ninja/benchmark/NinjaBenchmark.java) ninja-undertow
 is 15.5% faster than ninja-jetty for standard GET requests and 7.6% faster than
 ninja-jetty for POST requests w/ JSON.  Future optimizations and tuning should
 only improve performance.
+
+```
+Benchmark results for ninja.undertow.NinjaUndertow
+----------------------------------------------------
+ threads: 50
+requests: 50000
+get_with_params benchmark: 2096 ms (23854.96/sec)
+post_object_as_form benchmark: 2913 ms (17164.43/sec)
+post_object_as_json benchmark: 2246 ms (22261.80/sec)
+
+Benchmark results for ninja.standalone.NinjaJetty
+----------------------------------------------------
+ threads: 50
+requests: 50000
+get_with_params benchmark: 2521 ms (19833.40/sec)
+post_object_as_form benchmark: 3098 ms (16139.44/sec)
+post_object_as_json benchmark: 2402 ms (20815.99/sec)
+```
 
 ## What isn't implemented?
 

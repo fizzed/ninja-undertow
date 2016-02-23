@@ -2,13 +2,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.fizzed</groupId>
-    <artifactId>ninja-undertow</artifactId>
+    <artifactId>ninja-undertow-parent</artifactId>
     <version>5.3.1.undertow2-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    
-    <description>
-        This package contains a class that runs Ninja inside an embedded Undertow server.
-    </description>
+    <packaging>pom</packaging>
     
     <parent>
         <groupId>com.fizzed</groupId>
@@ -19,8 +15,6 @@
     <properties>
         <ninja.version>5.3.1</ninja.version>
     </properties>
-    
-    <url>http://www.ninjaframework.org</url>
 
     <scm>
         <url>https://github.com/fizzed/ninja-undertow.git</url>
@@ -40,67 +34,72 @@
             </properties>
         </profile>
     </profiles>
+    
+    <modules>
+        <module>ninja-undertow</module>
+        <module>ninja-benchmark</module>
+    </modules>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
-    <dependencies>
-
-        <dependency>
-            <groupId>org.ninjaframework</groupId>
-            <artifactId>ninja-core</artifactId>
-            <version>${ninja.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.undertow</groupId>
-            <artifactId>undertow-core</artifactId>
-            <version>1.3.17.Final</version>
-        </dependency>
-
-        <!-- testing -->
-
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>java-hamcrest</artifactId>
-            <version>2.0.0.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
+    <dependencyManagement>
         
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>3.0.1</version>
-            <scope>test</scope>
-        </dependency>
+        <dependencies>
+
+            <dependency>
+                <groupId>org.ninjaframework</groupId>
+                <artifactId>ninja-core</artifactId>
+                <version>${ninja.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.fizzed</groupId>
+                <artifactId>ninja-undertow</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.undertow</groupId>
+                <artifactId>undertow-core</artifactId>
+                <version>1.3.17.Final</version>
+            </dependency>
+
+            <!-- testing & benchmarks -->
+            
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>3.1.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>logging-interceptor</artifactId>
+                <version>3.1.2</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.ninjaframework</groupId>
+                <artifactId>ninja-standalone</artifactId>
+                <version>${ninja.version}</version>
+            </dependency>
+
+            <!-- testing only -->
+
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>java-hamcrest</artifactId>
+                <version>2.0.0.0</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+                <scope>test</scope>
+            </dependency>
+
+        </dependencies>
         
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>logging-interceptor</artifactId>
-            <version>3.0.1</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.ninjaframework</groupId>
-            <artifactId>ninja-standalone</artifactId>
-            <version>${ninja.version}</version>
-            <scope>test</scope>
-        </dependency>
-        
-    </dependencies>
+    </dependencyManagement>
     
 </project>
