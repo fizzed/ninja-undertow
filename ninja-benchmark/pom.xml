@@ -41,46 +41,70 @@
             </plugin>
         </plugins>
     </build>
+    
+    <profiles>
+        <profile>
+            <id>ninja-benchmark-exec</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.4.0</version>
+                        <executions>
+                            <execution>
+                                <id>benchmark-run</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencies>
         
+        <!-- for classic stack -->
+        
+        <!--
+        <dependency>
+            <groupId>org.ninjaframework</groupId>
+            <artifactId>ninja-core</artifactId>
+        </dependency>
+        -->
+        
+        <!-- for lite stack -->
+        
+        
+        <dependency>
+            <groupId>com.fizzed</groupId>
+            <artifactId>ninja-lite</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        
+        <!--
         <dependency>
             <groupId>org.ninjaframework</groupId>
             <artifactId>ninja-standalone</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.ninjaframework</groupId>
+                    <artifactId>ninja-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+        -->
+        
         
         <dependency>
             <groupId>com.fizzed</groupId>
             <artifactId>ninja-undertow</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.sf.ehcache</groupId>
-                    <artifactId>ehcache-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate-entitymanager</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>net.spy</groupId>
-                    <artifactId>spymemcached</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate-c3p0</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
-
-        <dependency>
-            <groupId>io.undertow</groupId>
-            <artifactId>undertow-core</artifactId>
-        </dependency>
-        
         
         
         <dependency>

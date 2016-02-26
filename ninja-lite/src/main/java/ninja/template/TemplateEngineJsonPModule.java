@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 joelauer.
+ * Copyright 2016 Fizzed, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package conf;
+package ninja.template;
 
-import ninja.Router;
-import ninja.application.ApplicationRoutes;
-import ninja.benchmark.controllers.BenchmarkController;
+import com.google.inject.AbstractModule;
 
-public class Routes implements ApplicationRoutes {
-    
+public class TemplateEngineJsonPModule extends AbstractModule {
+
     @Override
-    public void init(Router router) {
-        router.GET().route("/").with(BenchmarkController.class, "index");
-        router.GET().route("/benchmark_params").with(BenchmarkController.class, "benchmark_params");
-        router.POST().route("/benchmark_object").with(BenchmarkController.class, "benchmark_object");
+    protected void configure() {
+        bind(TemplateEngineJsonP.class);
     }
-    
+
 }

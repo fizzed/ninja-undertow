@@ -15,9 +15,13 @@
  */
 package ninja.lite;
 
+import com.google.inject.ConfigurationException;
+import com.google.inject.ProvisionException;
 import ninja.NinjaTest;
+import ninja.cache.NinjaCache;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 
 public class ApplicationTest extends NinjaTest {
@@ -27,6 +31,16 @@ public class ApplicationTest extends NinjaTest {
         String result = ninjaTestBrowser.makeRequest(getServerAddress() + "/");
         
         assertThat(result, is("Hello World!"));
+    }
+    
+    @Test
+    public void verifyCacheDisabled() {
+        try {
+            NinjaCache ninjaCache = getInjector().getInstance(NinjaCache.class);
+            fail("Cache should not have been bound");
+        } catch (ProvisionException | ConfigurationException e) {
+            // expected
+        }
     }
     
 }

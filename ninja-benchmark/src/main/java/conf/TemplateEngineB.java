@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 joelauer.
+ * Copyright 2016 Fizzed, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,25 @@
  */
 package conf;
 
-import ninja.Router;
-import ninja.application.ApplicationRoutes;
-import ninja.benchmark.controllers.BenchmarkController;
+import ninja.Context;
+import ninja.Result;
+import ninja.template.TemplateEngine;
 
-public class Routes implements ApplicationRoutes {
-    
+public class TemplateEngineB implements TemplateEngine {
+
     @Override
-    public void init(Router router) {
-        router.GET().route("/").with(BenchmarkController.class, "index");
-        router.GET().route("/benchmark_params").with(BenchmarkController.class, "benchmark_params");
-        router.POST().route("/benchmark_object").with(BenchmarkController.class, "benchmark_object");
+    public void invoke(Context cntxt, Result result) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getSuffixOfTemplatingEngine() {
+        return null;
+    }
+
+    @Override
+    public String getContentType() {
+        return "text/html";
     }
     
 }

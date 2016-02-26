@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ninja.template;
+package net.sf.ehcache;
 
-import javax.inject.Singleton;
-import ninja.Context;
-import ninja.Result;
+/**
+ *
+ * @author joelauer
+ */
+public class CacheException extends Exception {
 
-@Singleton
-public class TemplateEngineFreemarker implements TemplateEngine {
-
-    @Override
-    public void invoke(Context cntxt, Result result) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    /**
+     * Creates a new instance of <code>CacheException</code> without detail
+     * message.
+     */
+    public CacheException() {
     }
 
-    @Override
-    public String getSuffixOfTemplatingEngine() {
-        return ".ftl.html";
+    /**
+     * Constructs an instance of <code>CacheException</code> with the specified
+     * detail message.
+     *
+     * @param msg the detail message.
+     */
+    public CacheException(String msg) {
+        super(msg);
     }
-
-    @Override
-    public String getContentType() {
-        return "text/html";
-    }
-    
 }

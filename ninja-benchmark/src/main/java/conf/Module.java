@@ -12,7 +12,12 @@ public class Module extends AbstractModule {
     @Override
     protected void configure() {
         // disable annoying ehcache update checks
-        System.setProperty("net.sf.ehcache.skipUpdateCheck", "true");
+        //System.setProperty("net.sf.ehcache.skipUpdateCheck", "true");
+        
+        //install(new TemplateEngineJsonModule());
+        
+        bind(TemplateEngineA.class);
+        bind(TemplateEngineB.class);
     }
 
 }

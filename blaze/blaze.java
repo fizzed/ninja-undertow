@@ -15,8 +15,11 @@ public class blaze {
     private final String ninjaRepoUri = "https://github.com/ninjaframework/ninja.git";
 
     public void benchmark() {
-        exec("mvn", "test-compile").run();
-        exec("mvn", "exec:exec", "-Dexec.executable=java", "-Dexec.classpathScope=test", "-Dexec.args=-cp %classpath ninja.undertow.Benchmarker").run();
+        exec("mvn", "-Pninja-benchmark-exec", "-Dexec.executable=java", "-Dexec.classpathScope=runtime", "-Dexec.args=-cp %classpath ninja.benchmark.NinjaBenchmark").run();
+    }
+    
+    public void standalone() {
+        exec("mvn", "-Pninja-benchmark-exec", "-Dexec.executable=java", "-Dexec.classpathScope=runtime", "-Dexec.args=-cp %classpath ninja.benchmark.NinjaStandalone").run();
     }
     
     public void cloneOrRebaseNinjaRepo() throws Exception {

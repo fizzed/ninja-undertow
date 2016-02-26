@@ -24,6 +24,13 @@ import ninja.params.Param;
 
 public class BenchmarkController {
     
+    public Result index() {
+        return Results
+            .ok()
+            .html()
+            .renderRaw("Hello World!");
+    }
+    
     public Result benchmark_params(Context context, @Param("a") String a, @Param("b") String b) {
         // mock fetch things useful in a real world request like a cookie, header, and other params
         Cookie testCookie = context.getCookie("TEST");
