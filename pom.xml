@@ -37,6 +37,7 @@
     
     <modules>
         <module>ninja-undertow</module>
+        <module>ninja-lite</module>
         <module>ninja-benchmark</module>
     </modules>
 
@@ -95,6 +96,13 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
+                <scope>test</scope>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.ninjaframework</groupId>
+                <artifactId>ninja-test-utilities</artifactId>
+                <version>${ninja.version}</version>
                 <scope>test</scope>
             </dependency>
 
