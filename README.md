@@ -8,14 +8,14 @@ Undertow for Ninja Framework by Fizzed
 Standalone implementation for the [Ninja Framework](https://github.com/ninjaframework/ninja)
 using Undertow.  Ninja-undertow does *not use servlets* under-the-hood -- therefore
 it bypasses a significant amount of code that Ninja's default Jetty-based standalone
-uses.  Ninja-undertow can fully replace Ninja's Jetty-based standalone.
+uses.  Ninja-undertow is a drop-in replacement for Ninja's Jetty-based standalone.
 
 ## Performance
 
 Based on this [benchmark](ninja-benchmark/src/main/java/ninja/benchmark/NinjaBenchmark.java) ninja-undertow
 is 15.5% faster than ninja-jetty for standard GET requests and 7.6% faster than
 ninja-jetty for POST requests w/ JSON.  Future optimizations and tuning should
-only improve performance.
+continue to wident the performance gap.
 
 ```
 Benchmark results for ninja.undertow.NinjaUndertow
@@ -35,7 +35,7 @@ post_object_as_form benchmark: 3098 ms (16139.44/sec)
 post_object_as_json benchmark: 2402 ms (20815.99/sec)
 ```
 
-## What isn't implemented?
+## Differences with ninja-standalone (jetty)?
 
 Ninja-undertow passes all current Ninja unit tests except two.  Ninja-undertow
 does not implement any of Ninja's async-machine-beta features (which Ninja will 
