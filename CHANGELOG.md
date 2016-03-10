@@ -1,6 +1,10 @@
 Undertow for Ninja Framework by Fizzed
 ======================================
 
+5.4.0.undertow1 - 2016-03-10
+ 
+ - Bump to ninja 5.4.0
+
 5.3.1.undertow2 - 2016-02-29
 
  - META-INF/services resource included to take advantage of Ninja
