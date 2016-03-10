@@ -48,59 +48,24 @@ Ninja-undertow is compiled with Java 8, whereas Ninja supports Java 7+.
 
 Ninja-undertow is on maven central.  The version will always be the Ninja
 version it was compiled against + `undertowN` which represents the undertow
-build increment.  First, add the dependency to your Ninja project.
+build increment.  As of Ninja v5.4.0, as long as you don't have `ninja.standalone.NinjaJetty`
+on your classpath, Ninja will automatically find ninja-undertow and use it
+for everything (maven-plugin, testing, standalone). So if you previously had
+a dependency on `ninja-standalone`, you'll want to make sure you are only
+pulling `ninja-core` and `ninja-undertow`.
 
 ```xml
 <dependency>
+    <groupId>org.ninjaframework</groupId>
+    <artifactId>ninja-core</artifactId>
+    <version>5.4.0</version>
+</dependency>
+<dependency>
     <groupId>com.fizzed</groupId>
     <artifactId>ninja-undertow</artifactId>
-    <version>5.3.1.undertow1</version>
+    <version>5.4.0.undertow1</version>
 </dependency>
 ```
-
-Second, comment out or delete the `ninja-standalone` dependency.
-
-Third, to use `ninja-undertow` in the `ninja-maven-plugin` add a new configuration
-which sets it as the mainClass.
-
-```xml
-<build>
-    <plugins>
-        <plugin>
-            <groupId>org.ninjaframework</groupId>
-            <artifactId>ninja-maven-plugin</artifactId>
-            <version>5.3.1</version>
-            <executions>
-                <execution>
-                    <configuration>
-                        <mainClass>ninja.undertow.NinjaUndertow</mainClass>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
-</build>
-```
-
-Fourth, to enable `ninja-undertow` for your unit tests, you'll need to configure
-your surefire maven plugin to use it.
-
-```xml
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-surefire-plugin</artifactId>
-    <version>2.19.1</version>
-    <configuration>
-        <argLine>-Dninja.standalone.class=ninja.undertow.NinjaUndertow</argLine>
-    </configuration>
-</plugin>
-```
-
-Finally, to use `ninja-undertow` in your final fat jar, command-line, etc. you'll
-simply just need to run the main class `ninja.undertow.NinjaUndertow`.
-
-Hopefully, future version of Ninja can make it even easier to plugin a new 
-standalone (e.g. with service loaders).
 
 ## Testing
 
