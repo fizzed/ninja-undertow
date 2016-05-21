@@ -20,8 +20,12 @@ import static ninja.undertow.NinjaOkHttp3Tester.executeRequest;
 import static ninja.undertow.NinjaOkHttp3Tester.requestBuilder;
 import ninja.utils.NinjaMode;
 import okhttp3.FormBody;
+import okhttp3.Headers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
@@ -147,6 +151,51 @@ public class UndertowIntegrationTest {
         assertThat(response.code(), is(200));
         assertThat(response.header("Content-Type"), equalToIgnoringCase("text/html; charset=utf-8"));
         assertThat(response.body().string(), is("s=s, i=1, l=2, b=true"));
+    }
+    
+    @Test
+    public void fileUpload1() throws Exception {
+    	// simulated file content
+    	String fileContent = "Undertow Upload";
+    	String fileName = "test.txt";
+    	String contentType = "text/plain";
+    	
+        Request request
+            = requestBuilder(standalone, "/upload1")
+                .post(new MultipartBody.Builder().setType(MultipartBody.FORM)
+                		 .addFormDataPart("theFile",  fileName,  RequestBody.create(MediaType.parse(contentType), fileContent.getBytes()))
+                	      .build())
+                .build();
+        
+        Response response = executeRequest(client, request);
+        
+        assertThat(response.code(), is(200));
+        assertThat(response.header("Content-Type"), equalToIgnoringCase("text/html; charset=utf-8"));
+        assertThat(response.body().string(), is("l=" + fileContent.length()));
+    }
+    
+    @Test
+    public void fileUpload2() throws Exception {
+    	// simulated file content
+    	String fileContent1 = "Undertow Upload 1";
+    	String fileContent2 = "Undertow Upload 2";
+    	String fileName1 = "test1.txt";
+    	String fileName2 = "test2.txt";
+    	String contentType = "text/plain";
+    	
+        Request request
+            = requestBuilder(standalone, "/upload2")
+                .post(new MultipartBody.Builder().setType(MultipartBody.FORM)
+                		 .addFormDataPart("theFile1",  fileName1,  RequestBody.create(MediaType.parse(contentType), fileContent1.getBytes()))
+                		 .addFormDataPart("theFile2",  fileName2,  RequestBody.create(MediaType.parse(contentType), fileContent2.getBytes()))
+                	      .build())
+                .build();
+        
+        Response response = executeRequest(client, request);
+        
+        assertThat(response.code(), is(200));
+        assertThat(response.header("Content-Type"), equalToIgnoringCase("text/html; charset=utf-8"));
+        assertThat(response.body().string(), is(""));
     }
     
     @Test

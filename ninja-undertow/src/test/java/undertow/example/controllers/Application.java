@@ -16,11 +16,14 @@
 package undertow.example.controllers;
 
 import java.util.List;
+import java.util.Map;
+
 import ninja.Context;
 import ninja.Cookie;
 import ninja.Result;
 import ninja.Results;
 import ninja.params.Param;
+import ninja.uploads.FileItem;
 import undertow.example.models.BasicForm;
 
 public class Application {
@@ -81,6 +84,30 @@ public class Application {
             .renderRaw("s=" + form.getS() + ", i=" + form.getI() + ", l=" + form.getL() + ", b=" + form.getB());
     }
     
+    public Result upload1(Context context, @Param("theFile") FileItem fileItem ) throws Exception {
+    	assert( fileItem != null );
+    	assert( fileItem.getContentType().equals("text/plain"));
+    	assert( fileItem.getFileName().equals("test.txt") );
+        return Results
+            .ok()
+            .html().
+            renderRaw("l=" + fileItem.getFile().length() );
+    }
+
+    public Result upload2(Context context, @Param("theFile1") FileItem fileItem1, @Param("theFile2") FileItem fileItem2 ) throws Exception {
+    	assert( fileItem1 != null );
+    	assert( fileItem1.getContentType().equals("text/plain"));
+    	assert( fileItem1.getFileName().equals("test1.txt") );
+
+    	assert( fileItem2 != null );
+    	assert( fileItem2.getContentType().equals("text/plain"));
+    	assert( fileItem2.getFileName().equals("test2.txt") );
+
+    	return Results
+            .ok()
+            .html().renderRaw("");
+    }
+
     public Result scheme(Context context) {
         return Results
             .ok()

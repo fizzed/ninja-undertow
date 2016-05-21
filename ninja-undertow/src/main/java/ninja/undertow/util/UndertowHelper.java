@@ -111,7 +111,15 @@ public class UndertowHelper {
 	 * @param formValues
 	 */
 	public static void populateFileItemMap(Map<String, List<FileItem>> fileItemMap, String name, Deque<FormValue> formValues) {
-        for (FormData.FormValue formValue : formValues) {
+        List<FileItem> fileItemList = null;
+		if ( fileItemMap.containsKey(name) ) {
+        	fileItemList = fileItemMap.get(name);
+        } else {
+        	fileItemList = new ArrayList<FileItem>();
+        	fileItemMap.put(name,  fileItemList);
+        }
+		
+		for (FormData.FormValue formValue : formValues) {
 			
         	// make sure to skip all non-file upload fields
         	if (!formValue.isFile()) {
@@ -120,14 +128,7 @@ public class UndertowHelper {
 			
 			// we have a file upload
         	FileItem fileItem = getFileItemFromFormValue( formValue );
-
-        	if ( fileItemMap.containsKey(formValue.getFileName())) {
-				fileItemMap.get(name).add(fileItem);
-			} else {
-				List<FileItem> fileItemList = new ArrayList<FileItem>();
-				fileItemList.add(fileItem);
-				fileItemMap.put(name, fileItemList);
-			}
+        	fileItemList.add(fileItem);
         }
 	}
 
