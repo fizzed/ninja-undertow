@@ -15,6 +15,7 @@
  */
 package ninja.undertow;
 
+import ninja.undertow.util.ParameterFileItem;
 import ninja.undertow.util.UndertowCookieHelper;
 import com.google.common.base.Optional;
 import java.io.BufferedReader;
@@ -467,19 +468,70 @@ public class NinjaUndertowContext extends AbstractContext {
     
     
     
+    /**
+     * @see ninja.Context#getParameterAsFileItem(java.lang.String)
+     */
     @Override
     public FileItem getParameterAsFileItem(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    	if ( this.formData == null ) {
+    		return null;
+    	}
+
+        Iterator<String> it = this.formData.iterator();
+        while (it.hasNext()) {
+            String formName = it.next();
+            if ( formName.equals(name) ) {
+            	Deque<FormValue> formValues = this.formData.get(formName);
+            	ParameterFileItem fileItem = UndertowHelper.getFileItem(formName, formValues);
+            	if ( fileItem != null ) {
+            		return fileItem;
+            	}
+            }
+        }
+
+        // no file upload found with the given name
+        return null;
     }
 
+    /**
+     * @see ninja.Context#getParameterAsFileItems(java.lang.String)
+     */
     @Override
     public List<FileItem> getParameterAsFileItems(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (this.formData == null) {
+        	return Collections.emptyList();
+        }
+        
+    	List<FileItem> fileItemList = new ArrayList<FileItem>();
+        Iterator<String> it = this.formData.iterator();
+        while (it.hasNext()) {
+            String formName = it.next();
+            if ( formName.equals(name) ) {
+	            Deque<FormValue> formValues = this.formData.get(formName);
+	            UndertowHelper.populateFileItemList(fileItemList, formName, formValues);
+            }
+        }
+        
+        return fileItemList;
     }
 
+    /**
+     * @see ninja.Context#getParameterFileItems()
+     */
     @Override
     public Map<String, List<FileItem>> getParameterFileItems() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    	Map<String, List<FileItem>> fileItemMap = new HashMap<String, List<FileItem>>();
+    	
+        if (this.formData != null) {
+            Iterator<String> it = this.formData.iterator();
+            while (it.hasNext()) {
+                String formName = it.next();
+                Deque<FormValue> formValues = this.formData.get(formName);
+                UndertowHelper.populateFileItemMap(fileItemMap, formName, formValues);
+            }
+        }
+
+        return fileItemMap;
     }
 
     @Override
