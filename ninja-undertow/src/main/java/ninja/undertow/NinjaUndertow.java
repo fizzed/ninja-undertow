@@ -18,8 +18,11 @@ package ninja.undertow;
 
 import ch.qos.logback.classic.Level;
 import com.google.inject.Injector;
+import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
+import io.undertow.predicate.Predicate;
+import io.undertow.predicate.Predicates;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.handlers.BlockingHandler;
 import io.undertow.server.handlers.PathHandler;
@@ -135,7 +138,9 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
         // wireshark enabled?
         if (this.wireshark != null && this.wireshark) {
             logger.info("Undertow wireshark of requests and responses activated ({} = true)", KEY_UNDERTOW_WIRESHARK);
-            h = new RequestDumpingHandler(h);
+            // only activate request dumping on non-assets
+            Predicate isAssets = Predicates.prefix("/assets");
+            h = Handlers.predicate(isAssets, h, new RequestDumpingHandler(h));
         }
         
         // then eagerly parse form data (which is then included as an attachment)
