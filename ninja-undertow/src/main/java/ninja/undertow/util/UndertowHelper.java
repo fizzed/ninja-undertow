@@ -16,8 +16,17 @@
 package ninja.undertow.util;
 
 import io.undertow.server.handlers.form.FormData;
+import io.undertow.server.handlers.form.FormData.FormValue;
+import io.undertow.util.HeaderValues;
+import ninja.uploads.FileItem;
+
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.fileupload.util.FileItemHeadersImpl;
 
 public class UndertowHelper {
     
@@ -39,11 +48,109 @@ public class UndertowHelper {
 
         // copy values!
         for (FormData.FormValue formValue : formValues) {
-            current[index] = formValue.getValue();
-            index++;
+			
+        	// make sure to skip all file uploads.
+        	if (formValue.isFile()) {
+        		continue;
+        	}	
+				
+			// standard form parameter
+			current[index] = formValue.getValue();
+			index++;
+			
         }
         
         parameters.put(name, current);
     }
-    
+
+	/**
+	 * Gets a single (the first) {@link ParameterFileItem} from the given {@link FormValue}s.
+	 * 
+	 * @param formName
+	 * @param formValues
+	 * @return
+	 */
+	public static ParameterFileItem getFileItem(String formName, Deque<FormValue> formValues) {
+        for (FormData.FormValue formValue : formValues) {
+			
+        	// make sure to skip all non-file upload fields
+        	if (!formValue.isFile()) {
+        		continue;
+        	}	
+			
+			// we have a (first) file upload. create and return
+        	return getFileItemFromFormValue(formValue);
+        }
+        return null;
+	}
+
+	/**
+	 * Populate the given {@link List} of {@link FileItem}s with file uploads with the given parameter name.
+	 * @param fileItemList
+	 * @param name
+	 * @param formValues
+	 */
+	public static void populateFileItemList(List<FileItem> fileItemList, String name, Deque<FormValue> formValues) {
+        for (FormData.FormValue formValue : formValues) {
+			
+        	// make sure to skip all non-file upload fields
+        	if (!formValue.isFile()) {
+        		continue;
+        	}	
+			
+			// we have a file upload
+        	fileItemList.add( getFileItemFromFormValue(formValue));
+        }
+	}
+
+	/**
+	 * Populates the given {@link Map} of {@link FileItem}s with all file uploads from the given form. 
+	 * 
+	 * @param fileItemMap
+	 * @param name
+	 * @param formValues
+	 */
+	public static void populateFileItemMap(Map<String, List<FileItem>> fileItemMap, String name, Deque<FormValue> formValues) {
+        List<FileItem> fileItemList = null;
+		if ( fileItemMap.containsKey(name) ) {
+        	fileItemList = fileItemMap.get(name);
+        } else {
+        	fileItemList = new ArrayList<FileItem>();
+        	fileItemMap.put(name,  fileItemList);
+        }
+		
+		for (FormData.FormValue formValue : formValues) {
+			
+        	// make sure to skip all non-file upload fields
+        	if (!formValue.isFile()) {
+        		continue;
+        	}	
+			
+			// we have a file upload
+        	FileItem fileItem = getFileItemFromFormValue( formValue );
+        	fileItemList.add(fileItem);
+        }
+	}
+
+	/**
+	 * Creates a new {@link ParameterFileItem} from the given {@link FormValue} (which is assumed to be representing a file upload).
+	 * 
+	 * @param formValue
+	 * @return
+	 */
+	private static ParameterFileItem getFileItemFromFormValue(FormValue formValue) {
+		FileItemHeadersImpl fileItemHeaders = new FileItemHeadersImpl();
+		for (Iterator<HeaderValues> headerIterator = formValue.getHeaders().iterator(); headerIterator.hasNext();) {
+			HeaderValues hv = headerIterator.next();
+			String headerName = hv.getHeaderName().toString();
+			
+			for (Iterator<String> headerValueIterator = hv.iterator(); headerValueIterator.hasNext();) {
+				String headerValue = headerValueIterator.next();
+				fileItemHeaders.addHeader(headerName, headerValue);
+			}
+		}
+		return new ParameterFileItem(formValue.getFileName(), formValue.getPath().toFile(), fileItemHeaders);
+	}
+
+
 }
