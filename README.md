@@ -57,12 +57,12 @@ pulling `ninja-core` and `ninja-undertow`.
 <dependency>
     <groupId>org.ninjaframework</groupId>
     <artifactId>ninja-core</artifactId>
-    <version>5.4.0</version>
+    <version>5.5.0</version>
 </dependency>
 <dependency>
     <groupId>com.fizzed</groupId>
     <artifactId>ninja-undertow</artifactId>
-    <version>5.4.0.undertow1</version>
+    <version>5.5.0.undertow1</version>
 </dependency>
 ```
 
@@ -89,7 +89,7 @@ Add the following as a dependency
 <dependency>
     <groupId>com.fizzed</groupId>
     <artifactId>ninja-undertow</artifactId>
-    <version><!-- replace with dev version above --></version>
+    <version><!-- replace with version in pom.xml --></version>
 </dependency>
 ```
     cd ninja-upstream
