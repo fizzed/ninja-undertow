@@ -31,6 +31,8 @@ public class Routes implements ApplicationRoutes {
         router.GET().route("/test").with(Application.class, "test");
         router.GET().route("/parameters").with(Application.class, "parameters");
         router.POST().route("/parameters").with(Application.class, "parameters");
+        router.POST().route("/upload1").with(Application.class, "upload1");
+        router.POST().route("/upload2").with(Application.class, "upload2");
         router.POST().route("/benchmark_form").with(Application.class, "benchmark_form");
         router.POST().route("/benchmark_json").with(Application.class, "benchmark_json");
         router.POST().route("/basic_form").with(Application.class, "basic_form");
