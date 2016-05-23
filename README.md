@@ -37,10 +37,9 @@ post_object_as_json benchmark: 2402 ms (20815.99/sec)
 
 ## Differences with ninja-standalone (jetty)?
 
-Ninja-undertow passes all current Ninja unit tests except two.  Ninja-undertow
+Ninja-undertow passes **all** current Ninja unit tests except one.  Ninja-undertow
 does not implement any of Ninja's async-machine-beta features (which Ninja will 
-probably deprecate anyway) and some of the really recent File upload features
-(which should be easy to fix if someone wants to submit a PR!).
+probably deprecate in a future release).
 
 Ninja-undertow is compiled with Java 8, whereas Ninja supports Java 7+.
 
@@ -90,7 +89,7 @@ Add the following as a dependency
 <dependency>
     <groupId>com.fizzed</groupId>
     <artifactId>ninja-undertow</artifactId>
-    <version>5.3.1-SNAPSHOT</version>
+    <version><!-- replace with dev version above --></version>
 </dependency>
 ```
     cd ninja-upstream
