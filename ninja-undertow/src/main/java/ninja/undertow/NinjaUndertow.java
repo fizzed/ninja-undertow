@@ -27,9 +27,10 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.handlers.BlockingHandler;
 import io.undertow.server.handlers.PathHandler;
 import io.undertow.server.handlers.RequestDumpingHandler;
-import io.undertow.server.handlers.form.EagerFormParsingHandler;
 import javax.net.ssl.SSLContext;
 import ninja.standalone.AbstractStandalone;
+import ninja.undertow.util.EagerFormParsingHandlerWithCharset;
+import ninja.utils.NinjaConstant;
 import ninja.Bootstrap;
 import org.apache.commons.lang3.StringUtils;
 
@@ -144,7 +145,7 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
         }
         
         // then eagerly parse form data (which is then included as an attachment)
-        h = new EagerFormParsingHandler().setNext(h);
+        h = new EagerFormParsingHandlerWithCharset(null, NinjaConstant.UTF_8).setNext(h);
         
         // then requests MUST be blocking for IO to function
         h = new BlockingHandler(h);
