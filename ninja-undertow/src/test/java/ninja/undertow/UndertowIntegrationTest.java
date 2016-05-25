@@ -36,7 +36,6 @@ import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.is;
 
 public class UndertowIntegrationTest {
     static private final Logger log = LoggerFactory.getLogger(UndertowIntegrationTest.class);
@@ -103,7 +102,7 @@ public class UndertowIntegrationTest {
     
     @Test
     public void withFormParameters() throws Exception {
-        Request request
+    	Request request
             = requestBuilder(standalone, "/parameters")
                 .post(new FormBody.Builder()
                     .add("a", "joe")
@@ -116,6 +115,24 @@ public class UndertowIntegrationTest {
         assertThat(response.code(), is(200));
         assertThat(response.header("Content-Type"), equalToIgnoringCase("text/html; charset=utf-8"));
         assertThat(response.body().string(), is("a=joe, b=2"));
+    }
+    
+    @Test
+    public void withFormParametersUnicode() throws Exception {
+        String unicodeString = "Joe has $ — Jens has €. ÄÖÜßäöü";
+    	Request request
+            = requestBuilder(standalone, "/parameters")
+                .post(new FormBody.Builder()
+                    .add("a", unicodeString)
+                    .add("b", "2")
+                    .build())
+                .build();
+        
+        Response response = executeRequest(client, request);
+        
+        assertThat(response.code(), is(200));
+        assertThat(response.header("Content-Type"), equalToIgnoringCase("text/html; charset=utf-8"));
+        assertThat(response.body().string(), is("a=" + unicodeString + ", b=2"));
     }
     
     @Test
