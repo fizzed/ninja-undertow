@@ -1,6 +1,12 @@
 Undertow for Ninja Framework by Fizzed
 ======================================
 
+5.5.0.undertow2 - 2016-05-25
+
+ - Form parsing uses default UTF-8 charset (undertow defaults to Latin1, while
+   modern browsers default to UTF-8).  We will be submitting a bug report to
+   undertow, but this is a workaround for now (jfendler)
+
 5.5.0.undertow1 - 2016-05-23
 
  - Bump to ninja v5.5.0
