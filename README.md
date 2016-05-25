@@ -1,5 +1,5 @@
 Undertow for Ninja Framework by Fizzed
-======================================
+=======================================
 
 [![Build Status](https://travis-ci.org/fizzed/ninja-undertow.svg?branch=master)](https://travis-ci.org/fizzed/ninja-undertow)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.fizzed/ninja-undertow/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.fizzed/ninja-undertow)
