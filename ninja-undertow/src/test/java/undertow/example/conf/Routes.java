@@ -1,28 +1,9 @@
-/*
- * Copyright 2015 joelauer.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package undertow.example.conf;
 
 import undertow.example.controllers.Application;
 import ninja.Router;
 import ninja.application.ApplicationRoutes;
 
-/**
- *
- * @author joelauer
- */
 public class Routes implements ApplicationRoutes {
     
     @Override
@@ -39,6 +20,8 @@ public class Routes implements ApplicationRoutes {
         router.GET().route("/scheme").with(Application.class, "scheme");
         router.GET().route("/remote_addr").with(Application.class, "remote_addr");
         router.GET().route("/request_path").with(Application.class, "request_path");
+        router.GET().route("/param_parsers").with(Application.class, "param_parsers");
+        router.POST().route("/param_parsers").with(Application.class, "param_parsers_post");
     }
     
 }

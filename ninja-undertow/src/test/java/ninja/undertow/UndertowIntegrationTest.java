@@ -263,4 +263,35 @@ public class UndertowIntegrationTest {
         assertThat(page, is("/request_path"));
     }
     */
+    
+    @Test
+    public void paramParsersAsQueryParam() throws Exception {
+        Request request
+            = requestBuilder(standalone, "/param_parsers?enum=a")
+                .build();
+        
+        Response response = executeRequest(client, request);
+        
+        assertThat(response.code(), is(200));
+        assertThat(response.header("Content-Type"), equalToIgnoringCase("text/html; charset=utf-8"));
+        assertThat(response.body().string(), is("A"));
+    }
+    
+    @Test
+    public void paramParsersAsPost() throws Exception {
+        Request request
+            = requestBuilder(standalone, "/param_parsers")
+                .post(new FormBody.Builder()
+                    .add("enum", "b")
+                    .build()
+                )
+                .build();
+        
+        Response response = executeRequest(client, request);
+        
+        assertThat(response.code(), is(200));
+        assertThat(response.header("Content-Type"), equalToIgnoringCase("text/html; charset=utf-8"));
+        assertThat(response.body().string(), is("B"));
+    }
+    
 }

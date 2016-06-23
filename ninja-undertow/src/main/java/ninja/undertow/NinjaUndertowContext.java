@@ -58,6 +58,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Deque;
 import java.util.Iterator;
+import ninja.params.ParamParsers;
 import ninja.undertow.util.UndertowFileItemIterator;
 import ninja.undertow.util.UndertowFileItemStream;
 import ninja.undertow.util.UndertowHelper;
@@ -82,7 +83,8 @@ public class NinjaUndertowContext extends AbstractContext {
             NinjaProperties ninjaProperties,
             Session session,
             Validation validation,
-            Injector injector) {
+            Injector injector,
+            ParamParsers paramParsers) {
         
         super(
                 bodyParserEngineManager,
@@ -90,7 +92,8 @@ public class NinjaUndertowContext extends AbstractContext {
                 ninjaProperties,
                 session,
                 validation,
-                injector);
+                injector,
+                paramParsers);
         
         this.attributes = new HashMap<>();
     }

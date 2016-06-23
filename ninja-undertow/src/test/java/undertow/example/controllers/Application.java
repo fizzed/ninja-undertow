@@ -15,8 +15,6 @@
  */
 package undertow.example.controllers;
 
-import java.util.List;
-import java.util.Map;
 
 import ninja.Context;
 import ninja.Cookie;
@@ -127,6 +125,23 @@ public class Application {
             .ok()
             .html()
             .renderRaw(context.getRemoteAddr());
+    }
+    
+    static public enum TestEnum {
+        A,
+        B,
+        C
+    }
+    
+    public Result param_parsers(@Param("enum") TestEnum testEnum) {
+        return Results
+            .ok()
+            .html()
+            .renderRaw(testEnum.toString());
+    }
+    
+    public Result param_parsers_post(@Param("enum") TestEnum testEnum) {
+        return param_parsers(testEnum);
     }
     
 }
