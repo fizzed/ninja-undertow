@@ -1,6 +1,11 @@
 Undertow for Ninja Framework by Fizzed
 ======================================
 
+5.6.0.undertow1 - 2016-06-23
+
+ - Bump to Ninja v5.6.0
+ - Support for new ParamParsers feature in Ninja 5.6.0
+
 5.5.0.undertow2 - 2016-05-25
 
  - Form parsing uses default UTF-8 charset (undertow defaults to Latin1, while

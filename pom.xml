@@ -3,7 +3,7 @@
 
     <groupId>com.fizzed</groupId>
     <artifactId>ninja-undertow-parent</artifactId>
-    <version>5.5.0.undertow3-SNAPSHOT</version>
+    <version>5.6.0.undertow1-SNAPSHOT</version>
     <packaging>pom</packaging>
     
     <parent>
