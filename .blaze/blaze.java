@@ -14,6 +14,10 @@ public class blaze {
     private final Path ninjaRepoDir = Contexts.withBaseDir("../ninja-upstream").normalize();
     private final String ninjaRepoUri = "https://github.com/ninjaframework/ninja.git";
 
+    public void demo() {
+        exec("mvn", "test", "-DskipTests=true", "-Pninja-undertow-exec", "-Dexec.classpathScope=test", "-Dexec.mainClass=ninja.undertow.DemoMain").run();
+    }
+    
     public void benchmark() {
         //exec("mvn", "test-compile").run();
         exec("mvn", "test", "-Pninja-benchmark-exec", "-Dexec.executable=java", "-Dexec.classpathScope=test", "-Dexec.args=-cp %classpath ninja.benchmark.NinjaBenchmark").run();

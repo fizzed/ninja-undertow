@@ -11,6 +11,67 @@
         <version>5.6.0.undertow2-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <jetty.alpnAgent.version>2.0.0</jetty.alpnAgent.version>
+        <jetty.alpnAgent.path>${settings.localRepository}/org/mortbay/jetty/alpn/jetty-alpn-agent/${jetty.alpnAgent.version}/jetty-alpn-agent-${jetty.alpnAgent.version}.jar</jetty.alpnAgent.path>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <executions>
+                    <execution>
+                        <id>get-jetty-alpn-agent</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>get</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>org.mortbay.jetty.alpn</groupId>
+                            <artifactId>jetty-alpn-agent</artifactId>
+                            <version>${jetty.alpnAgent.version}</version>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>ninja-undertow-exec</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.5.0</version>
+                        <executions>
+                            <execution>
+                                <id>ninja-undertow-exec</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>java</executable>
+                                    <arguments>
+                                        <argument>-javaagent:${jetty.alpnAgent.path}</argument>
+                                        <argument>-cp</argument>
+                                        <classpath/>
+                                        <argument>${exec.mainClass}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <dependencies>
 
         <dependency>
@@ -25,6 +86,21 @@
 
         <!-- testing -->
 
+<!--
+        <dependency>
+            <groupId>org.eclipse.jetty.alpn</groupId>
+            <artifactId>alpn-api</artifactId>
+            <version>1.1.3.v20160715</version>
+            <scope>test</scope>
+        </dependency>
+-->        
+        <dependency>
+            <groupId>org.mortbay.jetty.alpn</groupId>
+            <artifactId>alpn-boot</artifactId>
+            <version>8.1.9.v20160720</version>
+            <scope>test</scope>
+        </dependency>
+        
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>java-hamcrest</artifactId>

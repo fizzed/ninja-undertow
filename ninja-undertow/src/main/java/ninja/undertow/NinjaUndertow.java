@@ -40,8 +40,11 @@ import org.apache.commons.lang3.StringUtils;
 public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
     
     static final public String KEY_UNDERTOW_WIRESHARK = "undertow.wireshark";
+    static final public String KEY_UNDERTOW_HTTP2 = "undertow.http2";
     
     static final public Boolean DEFAULT_UNDERTOW_WIRESHARK = Boolean.FALSE;
+    // false by default since alpn impl must be present
+    static final public Boolean DEFAULT_UNDERTOW_HTTP2 = Boolean.FALSE;
     
     protected Undertow undertow;
     protected boolean undertowStarted;                      // undertow fails on stop() if start() never called
@@ -49,6 +52,7 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
     protected NinjaUndertowHandler ninjaUndertowHandler;
     protected Bootstrap bootstrap;
     protected Boolean wireshark;
+    protected Boolean http2;
     protected SSLContext sslContext;
     
     public NinjaUndertow() {
@@ -71,6 +75,9 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
         // undertow-specific configuration
         this.wireshark(overlayedNinjaProperties.getBoolean(
                 KEY_UNDERTOW_WIRESHARK, this.wireshark, DEFAULT_UNDERTOW_WIRESHARK));
+        
+        this.http2(overlayedNinjaProperties.getBoolean(
+                KEY_UNDERTOW_HTTP2, this.http2, DEFAULT_UNDERTOW_HTTP2));
         
         // pass along context (this mirrors what ninja-servlet does)
         this.ninjaProperties.setContextPath(getContextPath());
@@ -180,6 +187,8 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
             undertowBuilder.addHttpsListener(this.sslPort, this.host, this.sslContext);
         }
         
+        undertowBuilder.setServerOption(UndertowOptions.ENABLE_HTTP2, this.http2);
+        
         return undertowBuilder.build();
     }
 
@@ -190,6 +199,15 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
     
     public Boolean getWireshark() {
         return this.wireshark;
+    }
+    
+    public NinjaUndertow http2(Boolean http2) {
+        this.http2 = http2;
+        return this;
+    }
+    
+    public Boolean getHttp2() {
+        return this.http2;
     }
 
 }
