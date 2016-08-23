@@ -60,14 +60,49 @@ pulling `ninja-core` and `ninja-undertow`.
 <dependency>
     <groupId>org.ninjaframework</groupId>
     <artifactId>ninja-core</artifactId>
-    <version>5.5.0</version>
+    <version>5.7.0</version>
 </dependency>
 <dependency>
     <groupId>com.fizzed</groupId>
     <artifactId>ninja-undertow</artifactId>
-    <version>5.5.0.undertow2</version>
+    <version>5.7.0.undertow1</version>
 </dependency>
 ```
+
+## Configuration
+
+The following Ninja (conf/application.conf) properties are supported.
+
+`ninja.host = <address>`
+
+Host interface to bind undertow server to.  "0.0.0.0" will bind to any address or
+"localhost" would bind to just the local interface.
+
+`ninja.port = <integer>`
+
+HTTP port to bind undertow server to.  Any value greater than zero activates
+the HTTP server.
+
+`ninja.ssl.port = <integer>`
+
+HTTPS port to bind undertow server to.  Any value greater than zero activates
+the HTTPS server.  All Ninja `ninja.ssl.*` properties are supported for setting
+up the keystore and truststore.
+
+`undertow.tracing = <boolean>`
+
+If true then an undertow `RequestDumpingHandler` will be added to the request
+handling pipeline to log all requests and responses.  Please note that this
+is an expensive feature and should only be enabled during development or in
+cases of troubleshooting in production.  False by default.
+
+`undertow.http2 = <boolean>`
+
+If true then HTTP/2.0 will be activated for the HTTPS port.  Please note that
+a valid ALPN-enabled SSL engine must be enabled in the JVM in order for this
+feature to actually work.  Java 9 will have ALPN by default, but for Java 7/8
+you'll need to include a valid ALPN jar on the boot classpath (not the regular
+JVM classpath) or use a javaagent to load one on-the-fly.
 
 ## Testing
 

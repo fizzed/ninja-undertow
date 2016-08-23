@@ -1,6 +1,13 @@
 Undertow for Ninja Framework by Fizzed
 ======================================
 
+5.7.0.undertow1 - 2016-08-23
+
+ - Bump to Ninja v5.7.0
+ - Bump to undertow v1.3.24.Final
+ - Support for HTTP/2.0 (see README.md for configuration & usage)
+ - Wireshark feature renamed to tracing
+
 5.6.0.undertow1 - 2016-06-23
 
  - Bump to Ninja v5.6.0
