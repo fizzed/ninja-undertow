@@ -31,7 +31,6 @@ import javax.net.ssl.SSLContext;
 import ninja.standalone.AbstractStandalone;
 import ninja.undertow.util.EagerFormParsingHandlerWithCharset;
 import ninja.utils.NinjaConstant;
-import ninja.Bootstrap;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -39,24 +38,17 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
     
-    static final public String KEY_UNDERTOW_WIRESHARK = "undertow.wireshark";
-    static final public String KEY_UNDERTOW_HTTP2 = "undertow.http2";
-    
-    static final public Boolean DEFAULT_UNDERTOW_WIRESHARK = Boolean.FALSE;
-    // false by default since alpn impl must be present
-    static final public Boolean DEFAULT_UNDERTOW_HTTP2 = Boolean.FALSE;
-    
+    protected final NinjaUndertowSettings settings;
     protected Undertow undertow;
     protected boolean undertowStarted;                      // undertow fails on stop() if start() never called
     protected HttpHandler undertowHandler;
     protected NinjaUndertowHandler ninjaUndertowHandler;
-    protected Bootstrap bootstrap;
-    protected Boolean wireshark;
-    protected Boolean http2;
+    protected NinjaUndertowBootstrap ninjaUndertowBootstrap;
     protected SSLContext sslContext;
     
     public NinjaUndertow() {
         super("NinjaUndertow");
+        this.settings = new NinjaUndertowSettings();
     }
     
     public static void main(String [] args) {
@@ -67,23 +59,19 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
     @Override
     public Injector getInjector() {
         checkStarted();
-        return this.bootstrap.getInjector();
+        return this.ninjaUndertowBootstrap.getInjector();
     }
     
     @Override
     public void doConfigure() throws Exception {
-        // undertow-specific configuration
-        this.wireshark(overlayedNinjaProperties.getBoolean(
-                KEY_UNDERTOW_WIRESHARK, this.wireshark, DEFAULT_UNDERTOW_WIRESHARK));
-        
-        this.http2(overlayedNinjaProperties.getBoolean(
-                KEY_UNDERTOW_HTTP2, this.http2, DEFAULT_UNDERTOW_HTTP2));
+        // apply properties to options
+        this.settings.apply(overlayedNinjaProperties);
         
         // pass along context (this mirrors what ninja-servlet does)
         this.ninjaProperties.setContextPath(getContextPath());
         
         // create new bootstrap to kickoff ninja
-        this.bootstrap = new NinjaUndertowBootstrap(ninjaProperties);
+        this.ninjaUndertowBootstrap = new NinjaUndertowBootstrap(ninjaProperties);
         
         // create chain of undertow handlers
         this.undertowHandler = createHttpHandler();
@@ -94,13 +82,13 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
     @Override
     public void doStart() throws Exception {
         try {
-            this.bootstrap.boot();
+            this.ninjaUndertowBootstrap.boot();
         } catch (Exception e) {
             throw tryToUnwrapInjectorException(e);
         }
         
         // slipstream injector into undertow handler BEFORE server starts
-        this.ninjaUndertowHandler.init(bootstrap.getInjector(), getContextPath());
+        this.ninjaUndertowHandler.init(ninjaUndertowBootstrap.getInjector(), getContextPath());
 
         String version = undertow.getClass().getPackage().getImplementationVersion();
         
@@ -129,9 +117,9 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
             this.undertow = null;
         }
         
-        if (this.bootstrap != null) {
-            this.bootstrap.shutdown();
-            this.bootstrap = null;
+        if (this.ninjaUndertowBootstrap != null) {
+            this.ninjaUndertowBootstrap.shutdown();
+            this.ninjaUndertowBootstrap = null;
         }
     }
     
@@ -144,8 +132,8 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
         HttpHandler h = this.ninjaUndertowHandler;
         
         // wireshark enabled?
-        if (this.wireshark != null && this.wireshark) {
-            logger.info("Undertow wireshark of requests and responses activated ({} = true)", KEY_UNDERTOW_WIRESHARK);
+        if (this.settings.getTracing()) {
+            logger.info("Undertow tracing of requests and responses activated ({} = true)", NinjaUndertowSettings.TRACING);
             // only activate request dumping on non-assets
             Predicate isAssets = Predicates.prefix("/assets");
             h = Handlers.predicate(isAssets, h, new RequestDumpingHandler(h));
@@ -187,27 +175,13 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
             undertowBuilder.addHttpsListener(this.sslPort, this.host, this.sslContext);
         }
         
-        undertowBuilder.setServerOption(UndertowOptions.ENABLE_HTTP2, this.http2);
+        undertowBuilder.setServerOption(UndertowOptions.ENABLE_HTTP2, this.settings.getHttp2());
         
         return undertowBuilder.build();
     }
 
-    public NinjaUndertow wireshark(Boolean wireshark) {
-        this.wireshark = wireshark;
-        return this;
-    }
-    
-    public Boolean getWireshark() {
-        return this.wireshark;
-    }
-    
-    public NinjaUndertow http2(Boolean http2) {
-        this.http2 = http2;
-        return this;
-    }
-    
-    public Boolean getHttp2() {
-        return this.http2;
+    public NinjaUndertowSettings getSettings() {
+        return this.settings;
     }
 
 }
