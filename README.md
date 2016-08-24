@@ -102,7 +102,9 @@ If true then HTTP/2.0 will be activated for the HTTPS port.  Please note that
 a valid ALPN-enabled SSL engine must be enabled in the JVM in order for this
 feature to actually work.  Java 9 will have ALPN by default, but for Java 7/8
 you'll need to include a valid ALPN jar on the boot classpath (not the regular
-JVM classpath) or use a javaagent to load one on-the-fly.
+JVM classpath) or use a javaagent to load one on-the-fly.  See http://www.eclipse.org/jetty/documentation/9.4.x/alpn-chapter.html
+for detailed info.  We recommend just using the alpn agent to load the correct
+classes at runtime.  See https://github.com/jetty-project/jetty-alpn-agent
 
 ## Testing
 
