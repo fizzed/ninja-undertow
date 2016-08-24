@@ -144,7 +144,7 @@ Add the following as a dependency
 </dependency>
 ```
     cd ninja-upstream
-    mvn test -Dninja.standalone.class=ninja.undertow.NinjaUndertow
+    mvn test -Dninja.standalone.class=ninja.undertow.NinjaUndertow -DasyncMachineTests=false
 
 That system property controls the underlying implementation that ninja creates
 for its own standalone instance.  Results in NinjaUndertow entirely replacing
