@@ -106,13 +106,24 @@ JVM classpath) or use a javaagent to load one on-the-fly.  See http://www.eclips
 for detailed info.  We recommend just using the alpn agent to load the correct
 classes at runtime.  See https://github.com/jetty-project/jetty-alpn-agent
 
+## Demo and benchmark
+
+This project uses [Blaze](https://github.com/fizzed/blaze) for assisting with
+running sample apps.  To run a demo:
+
+    java -jar blaze.jar demo
+
+To run a benchmark
+
+    java -jar blaze.jar benchmark
+
 ## Testing
 
 Compile and test project by itself and install it
 
     mvn test
 
-Use ninja unit tests to verify.  Install ninja-undertow followed by a [Blaze](https://github.com/fizzed/blaze)
+Use Ninja's unit tests to verify.  Install ninja-undertow followed by a [Blaze](https://github.com/fizzed/blaze)
 script to clone Ninja's upstream git repo.
 
     mvn install
