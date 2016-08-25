@@ -16,6 +16,7 @@
 package ninja.undertow;
 
 import com.google.inject.CreationException;
+import java.util.Arrays;
 import ninja.standalone.Standalone;
 import ninja.standalone.StandaloneHelper;
 import static ninja.undertow.NinjaOkHttp3Tester.executeRequest;
@@ -26,6 +27,7 @@ import ninja.utils.NinjaConstant;
 import ninja.utils.NinjaMode;
 import ninja.utils.NinjaProperties;
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -246,6 +248,39 @@ public class NinjaUndertowTest {
             Response response = executeRequest(client, request);
             
             assertThat(response.body().string(), is("https"));
+        } finally {
+            standalone.shutdown();
+        }
+    }
+    
+    @Test
+    public void http2() throws Exception {
+        // unfortunately okhttp only supports h2 via ssl
+        NinjaUndertow standalone = new NinjaUndertow()
+            .externalConfigurationPath("conf/undertow.http2.conf")
+            .ninjaMode(NinjaMode.dev)
+            .port(-1)
+            .sslPort(randomPort);
+        
+        // build special http client that trusts the dev cert
+        OkHttpClient client = NinjaOkHttp3Tester
+            .newHttpClientBuilderWithLogging()
+            .protocols(Arrays.asList(Protocol.HTTP_2, Protocol.HTTP_1_1))
+            .sslSocketFactory(trustAnySSLSocketFactory())
+            .hostnameVerifier(trustAnyHostnameVerifier())
+            .build();
+        
+        try {
+            standalone.start();
+            
+            Request request
+                = requestBuilder(standalone, "/scheme")
+                    .build();
+        
+            Response response = executeRequest(client, request);
+
+            assertThat(response.body().string(), is("https"));
+            assertThat(response.protocol(), is(Protocol.HTTP_2));
         } finally {
             standalone.shutdown();
         }

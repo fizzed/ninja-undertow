@@ -11,7 +11,7 @@
         <version>5.7.0.undertow2-SNAPSHOT</version>
     </parent>
 
-    <!-- no longer need ALPN loaded for undertow 1.4.0+ !
+    <!-- only required for unit testing h2 w/ okhttp -->
     <properties>
         <jetty.alpnAgent.version>2.0.0</jetty.alpnAgent.version>
         <jetty.alpnAgent.path>${settings.localRepository}/org/mortbay/jetty/alpn/jetty-alpn-agent/${jetty.alpnAgent.version}/jetty-alpn-agent-${jetty.alpnAgent.version}.jar</jetty.alpnAgent.path>
@@ -37,9 +37,15 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <argLine>-javaagent:${jetty.alpnAgent.path}</argLine>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-    -->
     
     <profiles>
         <profile>

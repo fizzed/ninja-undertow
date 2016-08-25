@@ -40,10 +40,10 @@ public class NinjaOkHttp3Tester {
     
     static public OkHttpClient.Builder newHttpClientBuilderWithLogging() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
         
         return new OkHttpClient.Builder()
-            .addInterceptor(logging);
+            .addNetworkInterceptor(logging);
     }
     
     static public HttpUrl.Builder newHttpUrlBuilder(Standalone standalone, String relativePath) {
