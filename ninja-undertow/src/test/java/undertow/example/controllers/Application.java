@@ -30,7 +30,7 @@ public class Application {
         return Results
             .ok()
             .html()
-            .renderRaw("Hello World<br/><a href='/test'>Test</a>");
+            .template("/undertow/example/views/home.ftl.html");
     }
     
     public Result test() {
@@ -144,11 +144,11 @@ public class Application {
         return param_parsers(testEnum);
     }
 
-    public Result websockets() {
+    public Result ws() {
         return Results
             .ok()
             .html()
-            .
+            .template("/undertow/example/views/ws.ftl.html");
     }
 
 }

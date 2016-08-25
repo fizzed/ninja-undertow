@@ -24,12 +24,15 @@ import io.undertow.UndertowOptions;
 import io.undertow.predicate.Predicate;
 import io.undertow.predicate.Predicates;
 import io.undertow.server.HttpHandler;
+import io.undertow.server.HttpServerExchange;
+import io.undertow.server.HttpUpgradeListener;
 import io.undertow.server.handlers.BlockingHandler;
 import io.undertow.server.handlers.PathHandler;
 import io.undertow.server.handlers.RequestDumpingHandler;
 import javax.net.ssl.SSLContext;
 
 import io.undertow.websockets.WebSocketConnectionCallback;
+import io.undertow.websockets.WebSocketProtocolHandshakeHandler;
 import io.undertow.websockets.core.AbstractReceiveListener;
 import io.undertow.websockets.core.BufferedTextMessage;
 import io.undertow.websockets.core.WebSocketChannel;
@@ -39,6 +42,7 @@ import ninja.standalone.AbstractStandalone;
 import ninja.undertow.util.EagerFormParsingHandlerWithCharset;
 import ninja.utils.NinjaConstant;
 import org.apache.commons.lang3.StringUtils;
+import org.xnio.StreamConnection;
 
 /**
  * Ninja standalone based on Undertow.
@@ -133,6 +137,9 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
     // sub-classes may be interested in these
     
     protected HttpHandler createHttpHandler() {
+        // NOTE: these handlers are created in backwards order
+        // path -> websockets -> blocking -> formParser -> ninja
+
         // root handler for ninja app
         this.ninjaUndertowHandler = new NinjaUndertowHandler();
         
@@ -152,19 +159,53 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
         // then requests MUST be blocking for IO to function
         h = new BlockingHandler(h);
 
-        h = Handlers.websocket(new WebSocketConnectionCallback() {
+        // then requests can be upgraded to websockets
+        final HttpHandler next = h;
+        h = new WebSocketProtocolHandshakeHandler(new WebSocketConnectionCallback() {
             @Override
             public void onConnect(WebSocketHttpExchange exchange, WebSocketChannel channel) {
+                System.out.println("WS connected with " + channel.getSourceAddress());
                 channel.getReceiveSetter().set(new AbstractReceiveListener() {
                     @Override
                     protected void onFullTextMessage(WebSocketChannel channel, BufferedTextMessage message) {
-                        System.out.println("Received message " + message.getData());
-                        WebSockets.sendText(message.getData(), channel, null);
+                        System.out.println("WS received message " + message.getData());
+                        WebSockets.sendText("Mocking bird", channel, null);
+                    }
+                });
+                channel.resumeReceives();
+            }
+        }, next) {
+            @Override
+            public void handleRequest(HttpServerExchange exchange) throws Exception {
+                String requestPath = exchange.getRequestPath();
+                switch (requestPath) {
+                    case "/myapp":
+                        super.handleRequest(exchange);
+                        break;
+                    default:
+                        System.out.println("No route for WS!");
+                        next.handleRequest(exchange);
+                        break;
+                }
+            }
+        };
+        
+        /*
+        h = Handlers.websocket(new WebSocketConnectionCallback() {
+            @Override
+            public void onConnect(WebSocketHttpExchange exchange, WebSocketChannel channel) {
+                System.out.println("WS connected with " + channel.getSourceAddress());
+                channel.getReceiveSetter().set(new AbstractReceiveListener() {
+                    @Override
+                    protected void onFullTextMessage(WebSocketChannel channel, BufferedTextMessage message) {
+                        System.out.println("WS received message " + message.getData());
+                        WebSockets.sendText("Mocking bird", channel, null);
                     }
                 });
                 channel.resumeReceives();
             }
         }, h);
+        */
 
         // then a context if one exists
         if (StringUtils.isNotEmpty(this.getContextPath())) {

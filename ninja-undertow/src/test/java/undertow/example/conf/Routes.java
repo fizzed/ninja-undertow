@@ -1,6 +1,5 @@
 package undertow.example.conf;
 
-import ninja.AssetsController;
 import undertow.example.controllers.Application;
 import ninja.Router;
 import ninja.application.ApplicationRoutes;
@@ -23,7 +22,7 @@ public class Routes implements ApplicationRoutes {
         router.GET().route("/request_path").with(Application.class, "request_path");
         router.GET().route("/param_parsers").with(Application.class, "param_parsers");
         router.POST().route("/param_parsers").with(Application.class, "param_parsers_post");
-        router.GET().route("/websockets").with(AssetsController.class, "serveStatic");
+        router.GET().route("/ws").with(Application.class, "ws");
     }
     
 }
