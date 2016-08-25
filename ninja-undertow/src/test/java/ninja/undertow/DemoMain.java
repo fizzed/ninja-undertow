@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DemoMain {
-    static private final Logger log = LoggerFactory.getLogger(Benchmarker.class);
+    static private final Logger log = LoggerFactory.getLogger(DemoMain.class);
 
     static public void main(String[] args) throws Exception {
         new NinjaUndertow()

@@ -178,7 +178,7 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
             undertowBuilder.addHttpsListener(this.sslPort, this.host, this.sslContext);
         }
         
-        logger.info("Undertow http2 support ({} = {})", NinjaUndertowSettings.HTTP2, this.settings.getHttp2());
+        logger.info("Undertow h2 protocol ({} = {})", NinjaUndertowSettings.HTTP2, this.settings.getHttp2());
         undertowBuilder.setServerOption(UndertowOptions.ENABLE_HTTP2, this.settings.getHttp2());
         
         return undertowBuilder.build();

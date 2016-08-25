@@ -1,6 +1,14 @@
 Undertow for Ninja Framework by Fizzed
 ======================================
 
+5.7.0.undertow2 - 2016-08-25
+
+ - Bump to undertow v1.4.0.Final
+ - HTTP/2.0 support no longer requires ALPN on JVM bootclasspath (thx undertow!)
+ - Fixed issue w/ settings not being applied
+ - Form parsing now uses standard undertow handler vs. our custom one
+ - Unit tests to confirm h2
+
 5.7.0.undertow1 - 2016-08-23
 
  - Bump to Ninja v5.7.0

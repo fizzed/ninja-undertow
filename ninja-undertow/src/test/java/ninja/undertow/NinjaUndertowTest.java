@@ -265,7 +265,7 @@ public class NinjaUndertowTest {
         // build special http client that trusts the dev cert
         OkHttpClient client = NinjaOkHttp3Tester
             .newHttpClientBuilderWithLogging()
-            .protocols(Arrays.asList(Protocol.HTTP_2, Protocol.HTTP_1_1))
+            //.protocols(Arrays.asList(Protocol.HTTP_2, Protocol.HTTP_1_1))
             .sslSocketFactory(trustAnySSLSocketFactory())
             .hostnameVerifier(trustAnyHostnameVerifier())
             .build();
