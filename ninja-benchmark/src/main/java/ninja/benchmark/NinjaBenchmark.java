@@ -15,6 +15,7 @@
  */
 package ninja.benchmark;
 
+import com.fizzed.crux.util.SecureUtil;
 import com.google.common.base.Stopwatch;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -22,8 +23,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import ninja.standalone.NinjaJetty;
 import ninja.standalone.Standalone;
 import ninja.standalone.StandaloneHelper;
+import ninja.undertow.NinjaUndertow;
+import ninja.utils.NinjaMode;
 import okhttp3.ConnectionPool;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
@@ -35,17 +39,53 @@ import org.apache.commons.io.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * System properties:
+ *   bm.requests: default 50000
+ *   bm.threads: default 50
+ *   bm.server: default undertow
+ *   bm.ssl: default false
+ * 
+ * @author joelauer
+ */
 public class NinjaBenchmark {
     static private final Logger log = LoggerFactory.getLogger(NinjaBenchmark.class);
     
     static public void main(String[] args) throws Exception {
-        // spin up standalone based on system property 'ninja.standalone.class'
-        Standalone standalone = StandaloneHelper.resolveStandaloneClass().newInstance()
-            .port(StandaloneHelper.findAvailablePort(8000, 9000))
-            .start();
+        // benchmark settings via system properties
+        final int requests = Integer.parseInt(System.getProperty("bm.requests", "50000"));
         
-        final int requests = 50000;
-        final int threads = 50;
+        final int threads = Integer.parseInt(System.getProperty("bm.threads", "50"));
+        
+        final String server = System.getProperty("bm.server", "undertow");
+        
+        Standalone standalone = null;
+        switch (server) {
+            case "undertow":
+                standalone = new NinjaUndertow();
+                break;
+            case "jetty":
+                standalone = new NinjaJetty();
+                break;
+            default:
+                throw new IllegalArgumentException("bm.server = " + server + " not supported");
+                    
+        }
+        
+        final boolean ssl = Boolean.parseBoolean(System.getProperty("bm.ssl", "false"));
+        
+        if (ssl) {
+            standalone.port(-1);
+            standalone.sslPort(StandaloneHelper.findAvailablePort(8000, 9000));
+        } else {
+            standalone.port(StandaloneHelper.findAvailablePort(8000, 9000));
+            standalone.sslPort(-1);
+        }
+        
+        // spin up standalone based on system property 'ninja.standalone.class'
+        standalone
+            .ninjaMode(NinjaMode.test)
+            .start();
         
         final NinjaBenchmark ninjaBenchmark = new NinjaBenchmark(standalone);
         
@@ -147,7 +187,9 @@ public class NinjaBenchmark {
     
     public void execute(final int threads, final int requests, final BenchmarkCall call) throws IOException, InterruptedException {
         final OkHttpClient client = new OkHttpClient.Builder()
-            .connectionPool(new ConnectionPool(threads, 60000L, TimeUnit.MILLISECONDS))
+            .connectionPool(new ConnectionPool(threads, 10000L, TimeUnit.MILLISECONDS))
+            .sslSocketFactory(SecureUtil.createTrustAllSSLSocketFactory())
+            .hostnameVerifier(SecureUtil.createTrustAllHostnameVerifier())
             .build();
         
         final AtomicInteger requested = new AtomicInteger();
@@ -156,8 +198,9 @@ public class NinjaBenchmark {
         
         // warmup by doing small # of requests first
         for (int i = 0; i < 20; i++) {
-            Response response = client.newCall(request).execute();
-            response.body().close();
+            try (Response response = client.newCall(request).execute()) {
+                // do nothing
+            }
         }
         
         final CountDownLatch startSignal = new CountDownLatch(1);
@@ -171,12 +214,14 @@ public class NinjaBenchmark {
                     try {
                         startSignal.await();
                         while (requested.incrementAndGet() < requests) {
-                            Response response = client.newCall(request).execute();
-                            response.body().close();
+                            try (Response response = client.newCall(request).execute()) {
+                                // do nothing
+                            }
                         }
-                        doneSignal.countDown();
                     } catch (InterruptedException | IOException e) {
                         e.printStackTrace(System.err);
+                    } finally {
+                        doneSignal.countDown();
                     }
                 }
             });

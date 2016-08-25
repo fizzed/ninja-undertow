@@ -13,14 +13,23 @@ public class blaze {
     private final Logger log = Contexts.logger();
     private final Path ninjaRepoDir = Contexts.withBaseDir("../ninja-upstream").normalize();
     private final String ninjaRepoUri = "https://github.com/ninjaframework/ninja.git";
-
+    
     public void demo() {
         exec("mvn", "test", "-DskipTests=true", "-Pninja-undertow-exec", "-Dexec.classpathScope=test", "-Dexec.mainClass=ninja.undertow.DemoMain").run();
     }
     
     public void benchmark() {
-        //exec("mvn", "test-compile").run();
-        exec("mvn", "test", "-Pninja-benchmark-exec", "-Dexec.executable=java", "-Dexec.classpathScope=test", "-Dexec.args=-cp %classpath ninja.benchmark.NinjaBenchmark").run();
+        // we need to passthru system properties with certain prefixes
+        final StringBuilder args = new StringBuilder();
+        System.getProperties().forEach((k,v) -> {
+            String key = (String)k;
+            if (key.startsWith("bm.") || key.startsWith("undertow.")) {
+                args.append("-D").append(key).append("=").append(v).append(" ");
+            }
+        });
+        
+        exec("mvn", "test", "-Pninja-benchmark-exec", "-Dexec.executable=java",
+             "-Dexec.classpathScope=test", "-Dexec.args=" + args + " -cp %classpath ninja.benchmark.NinjaBenchmark").run();
     }
     
     public void cloneOrRebaseNinjaRepo() throws Exception {

@@ -117,6 +117,19 @@ To run a benchmark
 
     java -jar blaze.jar benchmark
 
+The benchmark supports a number of system properties to run with various
+configurations.  To run the benchmark against jetty:
+
+    java -jar blaze.jar benchmark -Dbm.server=jetty
+
+To benchmark ssl:
+
+    java -jar blaze.jar benchmark -Dbm.ssl=true
+
+To activate http/2.0 for undertow and ssl:
+
+    java -jar blaze.jar benchmark -Dbm.ssl=true -Dundertow.http2=true
+
 ## Testing
 
 Compile and test project by itself and install it
