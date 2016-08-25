@@ -28,6 +28,13 @@ import io.undertow.server.handlers.BlockingHandler;
 import io.undertow.server.handlers.PathHandler;
 import io.undertow.server.handlers.RequestDumpingHandler;
 import javax.net.ssl.SSLContext;
+
+import io.undertow.websockets.WebSocketConnectionCallback;
+import io.undertow.websockets.core.AbstractReceiveListener;
+import io.undertow.websockets.core.BufferedTextMessage;
+import io.undertow.websockets.core.WebSocketChannel;
+import io.undertow.websockets.core.WebSockets;
+import io.undertow.websockets.spi.WebSocketHttpExchange;
 import ninja.standalone.AbstractStandalone;
 import ninja.undertow.util.EagerFormParsingHandlerWithCharset;
 import ninja.utils.NinjaConstant;
@@ -144,7 +151,21 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
         
         // then requests MUST be blocking for IO to function
         h = new BlockingHandler(h);
-        
+
+        h = Handlers.websocket(new WebSocketConnectionCallback() {
+            @Override
+            public void onConnect(WebSocketHttpExchange exchange, WebSocketChannel channel) {
+                channel.getReceiveSetter().set(new AbstractReceiveListener() {
+                    @Override
+                    protected void onFullTextMessage(WebSocketChannel channel, BufferedTextMessage message) {
+                        System.out.println("Received message " + message.getData());
+                        WebSockets.sendText(message.getData(), channel, null);
+                    }
+                });
+                channel.resumeReceives();
+            }
+        }, h);
+
         // then a context if one exists
         if (StringUtils.isNotEmpty(this.getContextPath())) {
             h = new PathHandler().addPrefixPath(this.getContextPath(), h);

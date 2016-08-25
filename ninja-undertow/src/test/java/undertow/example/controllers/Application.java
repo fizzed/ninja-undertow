@@ -143,5 +143,12 @@ public class Application {
     public Result param_parsers_post(@Param("enum") TestEnum testEnum) {
         return param_parsers(testEnum);
     }
-    
+
+    public Result websockets() {
+        return Results
+            .ok()
+            .html()
+            .
+    }
+
 }
