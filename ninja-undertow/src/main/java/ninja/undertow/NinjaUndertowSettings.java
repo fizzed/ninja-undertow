@@ -26,11 +26,11 @@ public class NinjaUndertowSettings {
     private Boolean http2;
     
     public NinjaUndertowSettings() {
-        this.tracing = Boolean.FALSE;
-        this.http2 = Boolean.FALSE;
+        // null by default
     }
     
     public void apply(OverlayedNinjaProperties overlayedNinjaProperties) {
+        // apply defaults in order of precedence
         this.tracing = overlayedNinjaProperties.getBoolean(
             TRACING, this.tracing, Boolean.FALSE);
         

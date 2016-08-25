@@ -65,7 +65,7 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
     
     @Override
     public void doConfigure() throws Exception {
-        // apply properties to options
+        // apply properties to settings
         this.settings.apply(overlayedNinjaProperties);
         
         // pass along context (this mirrors what ninja-servlet does)
@@ -178,6 +178,7 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
             undertowBuilder.addHttpsListener(this.sslPort, this.host, this.sslContext);
         }
         
+        logger.info("Undertow http2 support ({} = {})", NinjaUndertowSettings.HTTP2, this.settings.getHttp2());
         undertowBuilder.setServerOption(UndertowOptions.ENABLE_HTTP2, this.settings.getHttp2());
         
         return undertowBuilder.build();

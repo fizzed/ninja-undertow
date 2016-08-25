@@ -11,6 +11,7 @@
         <version>5.7.0.undertow2-SNAPSHOT</version>
     </parent>
 
+    <!-- no longer need ALPN loaded for undertow 1.4.0+ !
     <properties>
         <jetty.alpnAgent.version>2.0.0</jetty.alpnAgent.version>
         <jetty.alpnAgent.path>${settings.localRepository}/org/mortbay/jetty/alpn/jetty-alpn-agent/${jetty.alpnAgent.version}/jetty-alpn-agent-${jetty.alpnAgent.version}.jar</jetty.alpnAgent.path>
@@ -38,7 +39,8 @@
             </plugin>
         </plugins>
     </build>
-
+    -->
+    
     <profiles>
         <profile>
             <id>ninja-undertow-exec</id>
@@ -58,7 +60,7 @@
                                 <configuration>
                                     <executable>java</executable>
                                     <arguments>
-                                        <argument>-javaagent:${jetty.alpnAgent.path}</argument>
+                                        <!--<argument>-javaagent:${jetty.alpnAgent.path}</argument>-->
                                         <argument>-cp</argument>
                                         <classpath />
                                         <argument>${exec.mainClass}</argument>
@@ -87,12 +89,14 @@
 
         <!-- testing -->
               
+        <!--
         <dependency>
             <groupId>org.mortbay.jetty.alpn</groupId>
             <artifactId>alpn-boot</artifactId>
             <version>8.1.9.v20160720</version>
             <scope>test</scope>
         </dependency>
+        -->
         
         <dependency>
             <groupId>org.hamcrest</groupId>
