@@ -156,7 +156,7 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
         return h;
     }
     
-    protected Undertow createUndertow() throws Exception {
+    protected Undertow.Builder createUndertowBuilder() throws Exception {
         Undertow.Builder undertowBuilder = Undertow.builder()
             .setHandler(this.undertowHandler) 
             // NOTE: should ninja not use equals chars within its cookie values?
@@ -181,7 +181,11 @@ public class NinjaUndertow extends AbstractStandalone<NinjaUndertow> {
         logger.info("Undertow h2 protocol ({} = {})", NinjaUndertowSettings.HTTP2, this.settings.getHttp2());
         undertowBuilder.setServerOption(UndertowOptions.ENABLE_HTTP2, this.settings.getHttp2());
         
-        return undertowBuilder.build();
+        return undertowBuilder;
+    }
+
+    protected Undertow createUndertow() throws Exception {
+        return createUndertowBuilder().build();
     }
 
     public NinjaUndertowSettings getSettings() {
