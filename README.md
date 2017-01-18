@@ -62,12 +62,12 @@ pulling `ninja-core` and `ninja-undertow`.
 <dependency>
     <groupId>org.ninjaframework</groupId>
     <artifactId>ninja-core</artifactId>
-    <version>5.7.0</version>
+    <version>6.0.0-beta2</version>
 </dependency>
 <dependency>
     <groupId>com.fizzed</groupId>
     <artifactId>ninja-undertow</artifactId>
-    <version>5.7.0.undertow2</version>
+    <version>6.0.0-undertow1</version>
 </dependency>
 ```
 
