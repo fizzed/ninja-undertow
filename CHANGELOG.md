@@ -1,6 +1,12 @@
 Undertow for Ninja Framework by Fizzed
 ======================================
 
+6.0.0-undertow1 - 2017-01-18
+
+ - Initial version compat with Ninja v6. Built against ninja 6.0.0-beta2.
+ - Bump undertow from v1.4.0 to 1.4.8
+ - Bump maven parent dependency to v2.1.0
+
 5.7.0.undertow2 - 2016-08-25
 
  - Bump to undertow v1.4.0.Final
