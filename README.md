@@ -38,13 +38,15 @@ post_object_as_form benchmark: 3098 ms (16139.44/sec)
 post_object_as_json benchmark: 2402 ms (20815.99/sec)
 ```
 
+## Ninja 5 (or lower) support?
+
+Please use `ninja-undertow` v5.7.0.undertow2 or below if you need to target
+an older version of Ninja.
+
 ## Differences with ninja-standalone (jetty)?
 
-Ninja-undertow passes **all** current Ninja unit tests except one.  Ninja-undertow
-does not implement any of Ninja's async-machine-beta features (which Ninja will 
-probably deprecate in a future release).
-
-Ninja-undertow is compiled with Java 8, whereas Ninja supports Java 7+.
+Ninja-undertow passes **all** current Ninja unit tests.  As of Ninja v6, this
+library supplies everything ninja-jetty (standalone) provides.
 
 ## Usage
 
