@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.fizzed</groupId>
         <artifactId>ninja-undertow-parent</artifactId>
-        <version>6.0.0-undertow2-SNAPSHOT</version>
+        <version>6.1.0-undertow1</version>
     </parent>
 
     <!-- only required for unit testing h2 w/ okhttp -->
