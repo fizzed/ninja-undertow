@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
+import org.junit.Ignore;
 
 public class NinjaUndertowTest {
     static private final Logger log = LoggerFactory.getLogger(NinjaUndertowTest.class);
@@ -253,7 +254,7 @@ public class NinjaUndertowTest {
         }
     }
     
-    @Test
+    @Test @Ignore("Requires jetty alpn agent which is jvm-specific and brittle. JDK9 will fix this.")
     public void http2() throws Exception {
         // unfortunately okhttp only supports h2 via ssl
         NinjaUndertow standalone = new NinjaUndertow()
