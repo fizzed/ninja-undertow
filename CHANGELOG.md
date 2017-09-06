@@ -1,6 +1,10 @@
 Undertow for Ninja Framework by Fizzed
 ======================================
 
+6.1.0-undertow2 - 2017-09-06
+
+ - Bump undertow from v1.4.18 to v1.4.20
+
 6.1.0-undertow1 - 2017-08-22
 
  - Built against ninja v6.1.0
