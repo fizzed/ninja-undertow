@@ -16,11 +16,13 @@
 package undertow.example.controllers;
 
 
+import java.nio.charset.StandardCharsets;
 import ninja.Context;
 import ninja.Cookie;
 import ninja.Result;
 import ninja.Results;
 import ninja.params.Param;
+import ninja.params.PathParam;
 import ninja.uploads.FileItem;
 import undertow.example.models.BasicForm;
 
@@ -118,6 +120,14 @@ public class Application {
             .ok()
             .html()
             .renderRaw(context.getRequestPath());
+    }
+    
+    public Result request_path_encoded(
+            Context context,
+            @PathParam("encoded") String encoded) {
+        return Results
+            .text()
+            .renderRaw(encoded.getBytes(StandardCharsets.UTF_8));
     }
     
     public Result remote_addr(Context context) {

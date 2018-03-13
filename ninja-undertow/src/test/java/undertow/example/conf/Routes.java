@@ -20,6 +20,7 @@ public class Routes implements ApplicationRoutes {
         router.GET().route("/scheme").with(Application.class, "scheme");
         router.GET().route("/remote_addr").with(Application.class, "remote_addr");
         router.GET().route("/request_path").with(Application.class, "request_path");
+        router.GET().route("/request_path/{encoded}").with(Application::request_path_encoded);
         router.GET().route("/param_parsers").with(Application.class, "param_parsers");
         router.POST().route("/param_parsers").with(Application.class, "param_parsers_post");
     }

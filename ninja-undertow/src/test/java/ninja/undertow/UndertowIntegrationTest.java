@@ -35,6 +35,7 @@ import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static org.hamcrest.CoreMatchers.is;
+import org.junit.Ignore;
 
 public class UndertowIntegrationTest {
     static private final Logger log = LoggerFactory.getLogger(UndertowIntegrationTest.class);
@@ -253,15 +254,31 @@ public class UndertowIntegrationTest {
         assertThat(response.body().string(), is("/request_path"));
     }
     
-    /**
     @Test
     public void requestPathWithEncoded() throws Exception {
-        String page = Requester.to(standalone)
-                .GET("/request_path%2Fr");
-
-        assertThat(page, is("/request_path"));
+        Request request
+            = requestBuilder(standalone, "/request_path/%1e%3f%2f")
+                .build();
+        
+        Response response = executeRequest(client, request);
+        
+        assertThat(response.code(), is(200));
+        assertThat(response.header("Content-Type"), equalToIgnoringCase("text/plain; charset=utf-8"));
+        assertThat(response.body().string(), is("\u001e\u003f\u002f"));
     }
-    */
+    
+    @Test @Ignore("Ninja issue not undertow")
+    public void requestPathWithEncodedUTF8() throws Exception {
+        Request request
+            = requestBuilder(standalone, "/request_path/%20%ac")
+                .build();
+        
+        Response response = executeRequest(client, request);
+        
+        assertThat(response.code(), is(200));
+        assertThat(response.header("Content-Type"), equalToIgnoringCase("text/plain; charset=utf-8"));
+        assertThat(response.body().string(), is("\u20ac"));
+    }
     
     @Test
     public void paramParsersAsQueryParam() throws Exception {

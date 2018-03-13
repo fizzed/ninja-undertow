@@ -113,7 +113,8 @@ public class NinjaUndertowContext extends AbstractContext {
     @Override
     public String getRequestPath() {
         String contextPath = this.getContextPath();
-        String requestPath = exchange.getRequestPath();
+        // requestUri in undertow is *not* decoded in anyway
+        String requestPath = exchange.getRequestURI();
         
         // account for contextPath not being removed while in undertow
         if (StringUtils.isNotEmpty(contextPath)

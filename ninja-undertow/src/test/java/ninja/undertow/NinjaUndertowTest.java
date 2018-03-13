@@ -16,7 +16,6 @@
 package ninja.undertow;
 
 import com.google.inject.CreationException;
-import java.util.Arrays;
 import ninja.standalone.Standalone;
 import ninja.standalone.StandaloneHelper;
 import static ninja.undertow.NinjaOkHttp3Tester.executeRequest;
@@ -25,15 +24,11 @@ import static ninja.undertow.NinjaOkHttp3Tester.trustAnyHostnameVerifier;
 import static ninja.undertow.NinjaOkHttp3Tester.trustAnySSLSocketFactory;
 import ninja.utils.NinjaConstant;
 import ninja.utils.NinjaMode;
-import ninja.utils.NinjaProperties;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.slf4j.Logger;
