@@ -49,7 +49,7 @@
             <dependency>
                 <groupId>io.undertow</groupId>
                 <artifactId>undertow-core</artifactId>
-                <version>1.4.20.Final</version>
+                <version>1.4.23.Final</version>
             </dependency>
 
             <!-- testing & benchmarks -->
