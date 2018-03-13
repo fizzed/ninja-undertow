@@ -1,6 +1,14 @@
 Undertow for Ninja Framework by Fizzed
 ======================================
 
+6.2.2-1 - 2018-03-13
+
+ - Fix issue with encoded parameters in request path
+ - Bump Ninja from v6.1.0 to v6.2.2
+ - Bump Undertow from v1.4.20 to v2.0.1
+ - New version naming scheme of matching Ninja baseline version then appending
+   a simple increment value.
+
 6.1.0-undertow2 - 2017-09-06
 
  - Bump undertow from v1.4.18 to v1.4.20
